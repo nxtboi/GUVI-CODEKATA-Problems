@@ -1,0 +1,75 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+class ParkingLot {
+private:
+ int totalSlots;
+ int availableSlots;
+ int parkedVehicles;
+ double ratePerHour;
+ double totalRevenue;
+public:
+ void initialize(int slots, double rate) {
+ totalSlots = slots;
+ availableSlots = slots;
+ parkedVehicles = 0;
+ ratePerHour = rate;
+ totalRevenue = 0.0;
+ }
+bool parkVehicle() {
+ if (availableSlots > 0) {
+ availableSlots--;
+ parkedVehicles++;
+ return true;
+ }
+ return false;
+ }
+ bool removeVehicle(int hours) {
+ if (parkedVehicles > 0) {
+ double bill = hours * ratePerHour;
+ totalRevenue += bill;
+ availableSlots++;
+ parkedVehicles--;
+ cout << "Bill: " << fixed << setprecision(2) << bill << endl;
+ return true;
+ }
+ return false;
+ }
+ void displayStatus() {
+ cout << "Total Slots: " << totalSlots << endl;
+ cout << "Available Slots: " << availableSlots << endl;
+ cout << "Parked Vehicles: " << parkedVehicles << endl;
+ cout << "Total Revenue: " << fixed << setprecision(2) << totalRevenue << endl;
+ }
+};
+int main() {
+ ParkingLot system;
+ int slots;
+ double rate;
+
+ if (!(cin >> slots >> rate)) return 0;
+ system.initialize(slots, rate);
+ int numOperations;
+ cin >> numOperations;
+ for (int i = 0; i < numOperations; i++) {
+ char op;
+ cin >> op;
+ if (op == 'P') {
+ if (!system.parkVehicle()) {
+cout << "Parking Full" << endl;
+ }
+ }
+ else if (op == 'R') {
+ int hours;
+ cin >> hours;
+ if (!system.removeVehicle(hours)) {
+cout << "No Vehicles Parked" << endl;
+ }
+ }
+ else if (op == 'S') {
+ system.displayStatus();
+ }
+ }
+ return 0;
+}
