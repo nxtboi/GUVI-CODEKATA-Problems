@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+class Car {
+private:
+string make;
+ string model;
+ int year;
+public:
+ Car(string mk, string mdl, int yr, int currentYear) {
+ if (yr > currentYear) {
+ cout << "Invalid year";
+ year = -1;
+ } else {
+ make = mk;
+ model = mdl;
+ year = yr;
+ }
+ }
+ int getCarAge(int currentYear) {
+ if (year == -1) {
+ return -1;
+ }
+ return currentYear - year;
+ }
+};
+int main() {
+ string make, model;
+ int year, currentYear;
+ cin >> make >> model >> year >> currentYear;
+ Car car(make, model, year, currentYear);
+ int age = car.getCarAge(currentYear);
+ if (age != -1) {
+ cout << age;
+ }
+ return 0;
+}
