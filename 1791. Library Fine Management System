@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+class LibraryBook {
+private:
+ string bookTitle;
+ int bookID;
+ int daysLate;
+ double fineAmount;
+public:
+ void setDetails(string title, int id, int lateDays) {
+ bookTitle = title;
+ bookID = id;
+ daysLate = lateDays;
+ }
+ void calculateFine() {
+ if (daysLate <= 5) {
+ fineAmount = daysLate * 2.0;
+ } else {
+ fineAmount = daysLate * 5.0;
+ }
+ }
+ void display() {
+ cout << "Book Title: " << bookTitle << endl;
+ cout << "Book ID: " << bookID << endl;
+ cout << "Days Late: " << daysLate << endl;
+ cout << "Fine: " << fixed << setprecision(2) << fineAmount << endl;
+ }
+};
+int main() {
+ string title;
+ int id, lateDays;
+ if (cin >> title >> id >> lateDays) {
+ LibraryBook book;
+ book.setDetails(title, id, lateDays);
+ book.calculateFine();
+ book.display();
+ }
+ return 0;
+}
