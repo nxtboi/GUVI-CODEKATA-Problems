@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+class ElectricityBill {
+private:
+ string customerName;
+ int unitsConsumed;
+ double ratePerUnit;
+ double totalBill;
+public:
+ void setDetails(string name, int units) {
+ customerName = name;
+ unitsConsumed = units;
+ }
+ void calculateBill(double rate = 5.0) {
+ ratePerUnit = rate;
+ totalBill = unitsConsumed * ratePerUnit;
+ }
+ void display() {
+ cout << "Customer Name: " << customerName << endl;
+ cout << "Units Consumed: " << unitsConsumed << endl;
+ cout << "Rate per Unit: " << fixed << setprecision(2) << ratePerUnit << endl;
+ cout << "Total Bill: " << fixed << setprecision(2) << totalBill << endl;
+ }
+};
+int main() {
+ string name;
+ int units;
+ double inputRate;
+if (cin >> name >> units >> inputRate) {
+ ElectricityBill bill;
+ bill.setDetails(name, units);
+ if (inputRate <= 0) {
+ bill.calculateBill();
+ } else {
+ bill.calculateBill(inputRate);
+ }
+ bill.display();
+ }
+ return 0;
+}
