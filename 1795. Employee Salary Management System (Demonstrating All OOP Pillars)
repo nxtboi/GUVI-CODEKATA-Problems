@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+class Employee {
+private:
+ string name;
+ int id;
+ double baseSalary;
+public:
+ Employee(string n, int i, double s) : name(n), id(i), baseSalary(s) {}
+ double getBaseSalary() { return baseSalary; }
+ string getName() { return name; }
+ int getId() { return id; }
+ virtual double calculateSalary() = 0;
+ virtual ~Employee() {}
+};
+class FullTimeEmployee : public Employee {
+public:
+ FullTimeEmployee(string n, int i, double s) : Employee(n, i, s) {}
+double calculateSalary() override {
+ double bonus = getBaseSalary() * 0.20;
+ return getBaseSalary() + bonus;
+ }
+};
+class PartTimeEmployee : public Employee {
+public:
+ PartTimeEmployee(string n, int i, double s) : Employee(n, i, s) {}
+ double calculateSalary() override {
+ return getBaseSalary();
+ }
+};
+int main() {
+ int type, id;
+ string name;
+ double baseSalary;
+ if (!(cin >> type >> name >> id >> baseSalary)) return 0;
+ Employee* emp = nullptr;
+ if (type == 1) {
+ emp = new FullTimeEmployee(name, id, baseSalary);
+ } else if (type == 2) {
+ emp = new PartTimeEmployee(name, id, baseSalary);
+ }
+ if (emp != nullptr) {
+ cout << fixed << setprecision(2);
+ cout << "Employee Name: " << emp->getName() << endl;
+ cout << "Employee ID: " << emp->getId() << endl;
+ cout << "Final Salary: " << emp->calculateSalary() << endl;
+ delete emp;
+ }
+ return 0;
+}
