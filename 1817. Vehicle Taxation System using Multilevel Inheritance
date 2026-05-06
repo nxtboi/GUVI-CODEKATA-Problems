@@ -1,0 +1,62 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Level 1: Base Class
+class Vehicle {
+protected:
+    double price;
+
+public:
+    Vehicle(double p) : price(p) {}
+    
+    virtual double calculateTax() {
+        return price * 0.10; // Standard 10% tax
+    }
+};
+
+// Level 2: Intermediate Derived Class
+class Car : public Vehicle {
+protected:
+    string fuelType;
+
+    // Protected constructor prevents direct instantiation in main()
+    Car(double p, string fuel) : Vehicle(p), fuelType(fuel) {}
+};
+
+// Level 3: Final Derived Class
+class ElectricCar : public Car {
+private:
+    int batteryCapacity;
+
+public:
+    // Constructor chaining: ElectricCar -> Car -> Vehicle
+    ElectricCar(double p, string fuel, int battery) 
+        : Car(p, fuel), batteryCapacity(battery) {}
+
+    // Overriding tax calculation for electric vehicles
+    double calculateTax() override {
+        double standardTax = Vehicle::calculateTax();
+        if (fuelType == "Electric") {
+            return standardTax * 0.50; // 50% discount
+        }
+        return standardTax;
+    }
+};
+
+int main() {
+    double price;
+    string fuel;
+    int battery;
+
+    if (!(cin >> price >> fuel >> battery)) return 0;
+
+    // Use a base class pointer to demonstrate runtime behavior
+    Vehicle* myVehicle = new ElectricCar(price, fuel, battery);
+
+    cout << "Final Tax: " << myVehicle->calculateTax() << endl;
+
+    delete myVehicle;
+    return 0;
+}
