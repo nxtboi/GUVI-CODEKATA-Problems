@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Forward declaration of SecureVault for the friend class
+class SecureVault;
+
+class Vault {
+private:
+    string password;
+protected:
+    int vaultID;
+public:
+    Vault(int id, string pass) : vaultID(id), password(pass) {}
+
+    void open() {
+        // This will be used by the Auditor
+    }
+
+    // Granting Auditor access to private members
+    friend class Auditor;
+};
+
+// Protected inheritance: public and protected members of Vault 
+// become protected in SecureVault.
+class SecureVault : protected Vault {
+public:
+    SecureVault(int id, string pass) : Vault(id, pass) {}
+
+    // Auditor needs access to SecureVault to reach the base Vault members
+    friend class Auditor;
+};
+
+class Auditor {
+public:
+    void audit(SecureVault& sv, string inputPass) {
+        // Accessing base class private member 'password' via friend status
+        // and protected member 'vaultID'
+        if (sv.password == inputPass) {
+            cout << "Vault " << sv.vaultID << " Audit Successful" << endl;
+        } else {
+            cout << "Audit Failed" << endl;
+        }
+    }
+};
+
+int main() {
+    int id;
+    string actualPass, testPass;
+
+    // Input Format: Vault ID, Original Password, Password to Test
+    if (!(cin >> id >> actualPass >> testPass)) return 0;
+
+    SecureVault myVault(id, actualPass);
+    Auditor admin;
+
+    // myVault.open(); // This would fail in main due to protected inheritance
+    
+    admin.audit(myVault, testPass);
+
+    return 0;
+}
