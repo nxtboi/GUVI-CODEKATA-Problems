@@ -1,0 +1,58 @@
+#include <iostream>
+using namespace std;
+
+// Base Class
+class Account {
+public:
+    int accountNumber;
+protected:
+    double balance;
+private:
+    int pin;
+
+public:
+    Account(int acc, double bal, int p) : accountNumber(acc), balance(bal), pin(p) {}
+};
+
+// Derived Class 1: Public Inheritance
+// accountNumber remains public, balance remains protected
+class SavingsAccount : public Account {
+public:
+    SavingsAccount(int acc, double bal, int p) : Account(acc, bal, p) {}
+
+    void display() {
+        // Can access public and protected members
+        cout << "Savings Account: " << accountNumber << " " << balance << endl;
+    }
+};
+
+// Derived Class 2: Private Inheritance
+// accountNumber and balance become private here
+class SecureAccount : private Account {
+public:
+    SecureAccount(int acc, double bal, int p) : Account(acc, bal, p) {}
+
+    void display() {
+        // Can still access them inside the class scope
+        // but they cannot be accessed directly from main()
+        cout << "Secure Account: Access Restricted" << endl;
+    }
+};
+
+int main() {
+    int acc, p;
+    double bal;
+
+    if (!(cin >> acc >> bal >> p)) return 0;
+
+    SavingsAccount sa(acc, bal, p);
+    SecureAccount sea(acc, bal, p);
+
+    // Displaying from SavingsAccount (Public access)
+    sa.display();
+
+    // Displaying from SecureAccount (Private inheritance demonstration)
+    sea.display();
+
+    return 0;
+}
