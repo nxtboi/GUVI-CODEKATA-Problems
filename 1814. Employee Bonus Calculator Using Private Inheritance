@@ -1,0 +1,50 @@
+#include <iostream>
+using namespace std;
+
+// Base Class: Employee
+class Employee {
+public:
+    // Controls the workflow
+    void processSalary(int baseSalary) {
+        int bonus = calculateBonus(baseSalary);
+        displayTotal(baseSalary + bonus);
+    }
+
+protected:
+    // Bonus = 20% of baseSalary
+    int calculateBonus(int baseSalary) {
+        return (baseSalary * 20) / 100;
+    }
+
+private:
+    // Internal display logic
+    void displayTotal(int totalSalary) {
+        cout << "Total Salary: " << totalSalary << endl;
+    }
+};
+
+// Derived Class: SecureEmployee using Private Inheritance
+class SecureEmployee : private Employee {
+public:
+    // Public wrapper function
+    void generateSalary(int baseSalary) {
+        if (baseSalary <= 0) {
+            cout << "Invalid Salary" << endl;
+        } else {
+            // Can access processSalary because it was public in the base class
+            processSalary(baseSalary);
+        }
+    }
+};
+
+int main() {
+    int salary;
+    if (!(cin >> salary)) return 0;
+
+    SecureEmployee emp;
+    
+    // The only function accessible from main
+    emp.generateSalary(salary);
+
+    return 0;
+}
