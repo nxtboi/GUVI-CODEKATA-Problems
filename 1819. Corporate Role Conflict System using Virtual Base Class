@@ -1,0 +1,64 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Base Class
+class Person {
+protected:
+    string name, id;
+public:
+    Person(string n, string i) : name(n), id(i) {
+        cout << "Person Constructor" << endl;
+    }
+};
+
+// Derived Class 1 using Virtual Inheritance
+class Manager : virtual public Person {
+protected:
+    string department;
+public:
+    Manager(string n, string i, string dept) : Person(n, i), department(dept) {
+        cout << "Manager Constructor" << endl;
+    }
+};
+
+// Derived Class 2 using Virtual Inheritance
+class Engineer : virtual public Person {
+protected:
+    string project;
+public:
+    Engineer(string n, string i, string proj) : Person(n, i), project(proj) {
+        cout << "Engineer Constructor" << endl;
+    }
+};
+
+// Final Derived Class inheriting from both Manager and Engineer
+class TechLead : public Manager, public Engineer {
+public:
+    // Note: In virtual inheritance, the most derived class (TechLead) 
+    // is responsible for calling the Person constructor.
+    TechLead(string n, string i, string dept, string proj) 
+        : Person(n, i), Manager(n, i, dept), Engineer(n, i, proj) {
+        cout << "TechLead Constructor" << endl;
+    }
+
+    void display() {
+        cout << "Name: " << name << " ID: " << id << " Dept: " << department << " Project: " << project << endl;
+    }
+};
+
+int main() {
+    string name, id, dept, proj;
+    
+    // Read input: Rahul 101 AI VisionSystem
+    if (!(cin >> name >> id >> dept >> proj)) return 0;
+
+    // Create TechLead object
+    TechLead tl(name, id, dept, proj);
+    
+    // Display details
+    tl.display();
+
+    return 0;
+}
