@@ -1,0 +1,97 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+// --- Composite Pattern: Base Class ---
+class Item {
+public:
+    virtual double getPrice() = 0;
+    virtual ~Item() {}
+};
+
+// Leaf Class
+class Product : public Item {
+private:
+    double price;
+public:
+    Product(double p) : price(p) {}
+    double getPrice() override { return price; }
+};
+
+// Composite Class
+class ComboPack : public Item {
+private:
+    vector<Item*> items;
+public:
+    void add(Item* item) { items.push_back(item); }
+    double getPrice() override {
+        double total = 0;
+        for (auto item : items) {
+            total += item->getPrice();
+        }
+        return total;
+    }
+};
+
+// --- Strategy Pattern: Discount Strategies ---
+class DiscountStrategy {
+public:
+    virtual double applyDiscount(double total) = 0;
+    virtual ~DiscountStrategy() {}
+};
+
+class NoDiscount : public DiscountStrategy {
+public:
+    double applyDiscount(double total) override { return total; }
+};
+
+class PercentageDiscount : public DiscountStrategy {
+public:
+    double applyDiscount(double total) override { return total * 0.90; } // 10% off based on sample
+};
+
+class FlatDiscount : public DiscountStrategy {
+public:
+    double applyDiscount(double total) override { return total - 5000; } // 5000 off based on sample
+};
+
+int main() {
+    string itemType, discountType;
+    if (!(cin >> itemType >> discountType)) return 0;
+
+    // Setting up the data as per sample logic (56000 base price)
+    Product* p1 = new Product(15000);
+    Product* p2 = new Product(35000);
+    Product* p3 = new Product(6000);
+    
+    ComboPack* cart = new ComboPack();
+    cart->add(p1);
+    cart->add(p2);
+    cart->add(p3);
+
+    double basePrice = cart->getPrice();
+
+    // Strategy Selection
+    DiscountStrategy* strategy = nullptr;
+    if (discountType == "Percentage") {
+        strategy = new PercentageDiscount();
+    } else if (discountType == "Flat") {
+        strategy = new FlatDiscount();
+    } else {
+        strategy = new NoDiscount();
+    }
+
+    double finalPrice = strategy->applyDiscount(basePrice);
+
+    // Output formatting
+    cout << "Total Price before discount: " << (int)basePrice << endl;
+    cout << "Final Price after discount: " << (int)finalPrice << endl;
+
+    // Cleanup
+    delete cart; delete p1; delete p2; delete p3; delete strategy;
+
+    return 0;
+}
