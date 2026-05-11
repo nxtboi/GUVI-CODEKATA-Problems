@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class BankAccount {
+private:
+    double balance;
+
+public:
+    // Constructor with initial balance check
+    BankAccount(double initial_balance) {
+        if (initial_balance < 0) {
+            throw string("Invalid initial balance");
+        }
+        balance = initial_balance;
+    }
+
+    // Withdrawal function with logic checks
+    void withdraw(double amount) {
+        if (amount <= 0) {
+            throw string("Invalid withdrawal amount");
+        }
+        if (amount > balance) {
+            throw string("Insufficient balance");
+        }
+        
+        balance -= amount;
+        cout << "Withdrawal successful" << endl;
+        cout << "Remaining balance: " << balance << endl;
+    }
+};
+
+int main() {
+    double initial_bal, withdraw_amt;
+    
+    // Read input values
+    if (!(cin >> initial_bal >> withdraw_amt)) return 0;
+
+    try {
+        // Step 1: Attempt to create the account
+        BankAccount account(initial_bal);
+        
+        // Step 2: Attempt to withdraw the amount
+        account.withdraw(withdraw_amt);
+    }
+    catch (const string& e) {
+        // Catch and print the specific error message thrown
+        cout << e << endl;
+    }
+    catch (...) {
+        // Generic catch for any other unexpected exceptions
+        cout << "An unexpected error occurred" << endl;
+    }
+
+    return 0;
+}
