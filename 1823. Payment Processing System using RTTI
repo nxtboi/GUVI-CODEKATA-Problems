@@ -1,0 +1,94 @@
+#include <iostream>
+#include <string>
+#include <typeinfo>
+
+using namespace std;
+
+// Base Class
+class Payment {
+public:
+    virtual ~Payment() {} // Virtual destructor for RTTI and cleanup
+    virtual double processPayment() const = 0; // Pure virtual function
+};
+
+// Derived Class: CreditCard
+class CreditCard : public Payment {
+    double amount;
+public:
+    CreditCard(double a) : amount(a) {}
+    double processPayment() const override {
+        return amount * 1.02; // 2% fee
+    }
+};
+
+// Derived Class: UPI
+class UPI : public Payment {
+    double amount;
+public:
+    UPI(double a) : amount(a) {}
+    double processPayment() const override {
+        return amount; // No fee
+    }
+};
+
+// Derived Class: NetBanking
+class NetBanking : public Payment {
+    double amount;
+public:
+    NetBanking(double a) : amount(a) {}
+    double processPayment() const override {
+        return amount * 1.01; // 1% fee
+    }
+};
+
+// RTTI Identification Function
+void identifyPayment(Payment* p) {
+    if (p == nullptr) {
+        cout << "Invalid Payment Method" << endl;
+        return;
+    }
+
+    // Using dynamic_cast to detect actual type
+    if (dynamic_cast<CreditCard*>(p)) {
+        cout << "Type: CreditCard" << endl;
+    } else if (dynamic_cast<UPI*>(p)) {
+        cout << "Type: UPI" << endl;
+    } else if (dynamic_cast<NetBanking*>(p)) {
+        cout << "Type: NetBanking" << endl;
+    } else {
+        cout << "Invalid Payment Method" << endl;
+        return;
+    }
+
+    cout << "Final Amount: " << p->processPayment() << endl;
+}
+
+int main() {
+    int n;
+    if (!(cin >> n)) return 0;
+
+    while (n--) {
+        char method;
+        double amt;
+        cin >> method >> amt;
+
+        Payment* p = nullptr;
+
+        if (method == 'C') {
+            p = new CreditCard(amt);
+        } else if (method == 'U') {
+            p = new UPI(amt);
+        } else if (method == 'N') {
+            p = new NetBanking(amt);
+        }
+
+        if (p) {
+            identifyPayment(p);
+            delete p;
+        } else {
+            cout << "Invalid Payment Method" << endl;
+        }
+    }
+
+    return 0;
+}
