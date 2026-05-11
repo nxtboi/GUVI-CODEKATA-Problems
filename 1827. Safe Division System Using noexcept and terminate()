@@ -1,0 +1,37 @@
+#include <iostream>
+#include <exception>
+#include <stdexcept>
+
+using namespace std;
+
+// 2. Define a custom terminate handler
+void myTerminate() {
+    cout << "Custom terminate called. Program terminated due to noexcept violation." << endl;
+    exit(0); // Exit the program as required
+}
+
+// 1. Create function with noexcept specification
+double safeDivide(double a, double b) noexcept {
+    if (b == 0) {
+        // Throwing here will trigger std::terminate because of noexcept
+        throw runtime_error("Division by zero");
+    }
+    return a / b;
+}
+
+int main() {
+    // Register the custom terminate handler
+    set_terminate(myTerminate);
+
+    double num1, num2;
+    if (!(cin >> num1 >> num2)) return 0;
+
+    // 3. Call safeDivide and handle output
+    // If num2 is 0, safeDivide will throw, noexcept will catch it,
+    // and myTerminate() will be called automatically.
+    double result = safeDivide(num1, num2);
+    
+    cout << "Result: " << result << endl;
+
+    return 0;
+}
