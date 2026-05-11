@@ -1,0 +1,79 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// 1. Polymorphic Base Class
+class Shape {
+public:
+    virtual void display() = 0; // Pure virtual function
+    virtual double area() = 0;  // Needed for the processShape logic
+    virtual ~Shape() {}         // Virtual destructor
+};
+
+// 2. Derived Class: Circle
+class Circle : public Shape {
+    double radius;
+public:
+    Circle(double r) : radius(r) {}
+    void display() override {}
+    double area() override {
+        return 3.14 * radius * radius;
+    }
+};
+
+// 2. Derived Class: Rectangle
+class Rectangle : public Shape {
+    double length, width;
+public:
+    Rectangle(double l, double w) : length(l), width(w) {}
+    void display() override {}
+    double area() override {
+        return length * width;
+    }
+};
+
+// 3. Template Function with dynamic_cast
+template <typename T>
+void processShape(Shape* ptr) {
+    // Attempt downcasting or cross-casting
+    T* derived = dynamic_cast<T*>(ptr);
+    
+    if (derived) {
+        cout << "Area: " << derived->area() << endl;
+    } else {
+        cout << "Invalid cast" << endl;
+    }
+}
+
+int main() {
+    string type, cast_type;
+    
+    if (!(cin >> type)) return 0;
+
+    Shape* shapePtr = nullptr;
+
+    // Create the initial shape based on input
+    if (type == "circle") {
+        double r;
+        cin >> r;
+        shapePtr = new Circle(r);
+    } else if (type == "rectangle") {
+        double l, w;
+        cin >> l >> w;
+        shapePtr = new Rectangle(l, w);
+    }
+
+    // Read the target cast type
+    cin >> cast_type;
+
+    // Process using templates
+    if (cast_type == "circle") {
+        processShape<Circle>(shapePtr);
+    } else if (cast_type == "rectangle") {
+        processShape<Rectangle>(shapePtr);
+    }
+
+    delete shapePtr;
+    return 0;
+}
