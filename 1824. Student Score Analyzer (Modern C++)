@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <algorithm>
+#include <iomanip>
+
+using namespace std;
+
+// Structure to store final student data
+struct Student {
+    string name;
+    double average;
+};
+
+int main() {
+    int n;
+    if (!(cin >> n)) return 0;
+
+    // Maps to track total scores and count of appearances for each name
+    unordered_map<string, double> totalScores;
+    unordered_map<string, int> counts;
+    vector<string> order; // To maintain unique names
+
+    for (int i = 0; i < n; ++i) {
+        string name;
+        double score;
+        cin >> name >> score;
+        
+        if (counts.find(name) == counts.end()) {
+            order.push_back(name);
+        }
+        totalScores[name] += score;
+        counts[name]++;
+    }
+
+    // Transfer aggregated data to a vector for sorting
+    vector<Student> students;
+    for (const string& name : order) {
+        students.push_back({name, totalScores[name] / counts[name]});
+    }
+
+    // Sort using a lambda comparator
+    sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
+        if (a.average != b.average) {
+            return a.average > b.average; // Descending by score
+        }
+        return a.name < b.name; // Ascending by name (alphabetical tie-breaker)
+    });
+
+    // Output formatting
+    cout << fixed << setprecision(2);
+    cout << "Sorted List:" << endl;
+    for (const auto& s : students) {
+        cout << s.name << " " << s.average << endl;
+    }
+
+    if (!students.empty()) {
+        cout << "Top Scorer: " << students[0].name << endl;
+    }
+
+    return 0;
+}
