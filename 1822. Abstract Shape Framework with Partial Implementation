@@ -1,0 +1,75 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+
+using namespace std;
+
+// Abstract Base Class
+class Shape {
+public:
+    // Pure virtual function
+    virtual double area() = 0;
+
+    // Virtual function with partial implementation
+    virtual void describe() {
+        cout << "Shape Description" << endl;
+    }
+
+    // Virtual destructor for proper chaining
+    virtual ~Shape() {}
+};
+
+// Derived Class: Triangle
+class Triangle : public Shape {
+private:
+    double base, height;
+public:
+    Triangle(double b, double h) : base(b), height(h) {}
+    
+    double area() override {
+        return 0.5 * base * height;
+    }
+};
+
+// Derived Class: Square
+class Square : public Shape {
+private:
+    double side;
+public:
+    Square(double s) : side(s) {}
+    
+    double area() override {
+        return side * side;
+    }
+};
+
+int main() {
+    double b, h, s;
+    
+    // Reading input: Triangle base/height and Square side
+    if (!(cin >> b >> h >> s)) return 0;
+
+    // Using an array of base pointers to demonstrate polymorphism
+    Shape* shapes[2];
+    shapes[0] = new Triangle(b, h);
+    shapes[1] = new Square(s);
+
+    // Set precision for floating point output
+    cout << fixed << setprecision(2);
+
+    // Demonstration of runtime polymorphism
+    for (int i = 0; i < 2; ++i) {
+        shapes[i]->describe(); // Calls base implementation
+        if (i == 0)
+            cout << "Triangle Area: " << shapes[i]->area() << endl;
+        else
+            cout << "Square Area: " << shapes[i]->area() << endl;
+    }
+
+    // Cleanup to trigger destructor chaining
+    for (int i = 0; i < 2; ++i) {
+        delete shapes[i];
+    }
+
+    return 0;
+}
