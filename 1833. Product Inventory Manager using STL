@@ -1,0 +1,53 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <set>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    int n;
+    if (!(cin >> n)) return 0;
+
+    unordered_map<string, int> priceMap;
+    set<string> productNames;
+    priority_queue<int> pq;
+
+    for (int i = 0; i < n; ++i) {
+        string name;
+        int price;
+        cin >> name >> price;
+
+        // 1. Update/Store price (unordered_map handles duplicates)
+        priceMap[name] = price;
+        // 2. Maintain unique names for sorted output
+        productNames.insert(name);
+    }
+
+    // 3. Fill priority_queue with the final prices from the map
+    int countAbove1000 = 0;
+    for (auto const& [name, price] : priceMap) {
+        pq.push(price);
+        if (price > 1000) {
+            countAbove1000++;
+        }
+    }
+
+    // Output Results
+    cout << "Products (sorted): ";
+    for (const string& name : productNames) {
+        cout << name << " ";
+    }
+    cout << "\n";
+
+    if (!pq.empty()) {
+        cout << "Highest Price: " << pq.top() << "\n";
+    }
+
+    cout << "Products above 1000: " << countAbove1000 << "\n";
+
+    return 0;
+}
