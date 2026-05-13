@@ -1,0 +1,62 @@
+#include <iostream>
+using namespace std;
+
+class Account {
+protected:
+    int accountNumber;
+    double balance;
+public:
+    Account(int accNo, double bal) {
+        accountNumber = accNo;
+        balance = bal;
+    }
+    void deposit(double amount) {
+        balance += amount;
+    }
+    virtual void withdraw(double amount) {
+        if (amount > balance) {
+            cout << "Savings Balance: " << balance - amount << " not allowed\n";
+        } else {
+            balance -= amount;
+            cout << "Savings Balance: " << balance << "\n";
+        }
+    }
+};
+
+class SavingsAccount : public Account {
+    double interestRate;
+public:
+    SavingsAccount(int accNo, double bal, double rate) : Account(accNo, bal) {
+        interestRate = rate;
+    }
+};
+
+class CurrentAccount : public Account {
+    double overdraftLimit;
+public:
+    CurrentAccount(int accNo, double bal, double limit) : Account(accNo, bal) {
+        overdraftLimit = limit;
+    }
+    void withdraw(double amount) override {
+        if (amount > balance + overdraftLimit) {
+            cout << "Current Balance: " << balance - amount << " exceeds overdraft limit\n";
+        } else {
+            balance -= amount;
+            cout << "Current Balance: " << balance << "\n";
+        }
+    }
+};
+
+int main() {
+    int accNo;
+    double initBal, intRate, overdraft, withdrawAmt;
+    
+    if (cin >> accNo >> initBal >> intRate >> overdraft >> withdrawAmt) {
+        SavingsAccount sa(accNo, initBal, intRate);
+        sa.withdraw(withdrawAmt);
+        
+        CurrentAccount ca(accNo, initBal, overdraft);
+        ca.withdraw(withdrawAmt);
+    }
+    return 0;
+}
