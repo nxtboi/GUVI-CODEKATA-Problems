@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+// 1. Define the Internal namespace
+namespace Internal {
+    int marks(int m1, int m2) {
+        return m1 + m2;
+    }
+}
+
+// 2. Define the External namespace
+namespace External {
+    int marks(int m1, int m2) {
+        return m1 + m2;
+    }
+}
+
+int main() {
+    int i1, i2, e1, e2;
+
+    // Read input: internal1, internal2, external1, external2
+    if (!(cin >> i1 >> i2 >> e1 >> e2)) return 0;
+
+    // Call functions explicitly using the scope resolution operator
+    int internalTotal = Internal::marks(i1, i2);
+    int externalTotal = External::marks(e1, e2);
+    int grandTotal = internalTotal + externalTotal;
+
+    // Print the results in the required format
+    cout << "Internal Total: " << internalTotal << endl;
+    cout << "External Total: " << externalTotal << endl;
+    cout << "Grand Total: " << grandTotal << endl;
+
+    return 0;
+}
