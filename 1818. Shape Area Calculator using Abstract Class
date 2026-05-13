@@ -1,0 +1,59 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+// Abstract Base Class
+class Shape {
+public:
+    virtual double area() = 0; // Pure virtual function
+};
+
+// Derived Class - Circle
+class Circle : public Shape {
+    double radius;
+
+public:
+    Circle(double r) {
+        radius = r;
+    }
+
+    double area() {
+        return 3.1416 * radius * radius;
+    }
+};
+
+// Derived Class - Rectangle
+class Rectangle : public Shape {
+    double length, width;
+
+public:
+    Rectangle(double l, double w) {
+        length = l;
+        width = w;
+    }
+
+    double area() {
+        return length * width;
+    }
+};
+
+int main() {
+    double radius, length, width;
+
+    cin >> radius;
+    cin >> length;
+    cin >> width;
+
+    // Base class pointers
+    Shape* s1 = new Circle(radius);
+    Shape* s2 = new Rectangle(length, width);
+
+    cout << fixed << setprecision(2);
+    cout << "Circle Area: " << s1->area() << endl;
+    cout << "Rectangle Area: " << s2->area() << endl;
+
+    delete s1;
+    delete s2;
+
+    return 0;
+}
