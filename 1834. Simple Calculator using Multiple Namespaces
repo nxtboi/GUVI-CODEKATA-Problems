@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+// 1. Namespace Arithmetic for addition
+namespace Arithmetic {
+    int operate(int a, int b) {
+        return a + b;
+    }
+}
+
+// 2. Namespace Advanced for multiplication
+namespace Advanced {
+    int operate(int a, int b) {
+        return a * b;
+    }
+
+    // 3. Nested Namespace Power for exponentiation
+    namespace Power {
+        int operate(int base, int exp) {
+            return pow(base, exp);
+        }
+    }
+}
+
+int main() {
+    int a, b, base, exponent;
+
+    // Input format: a b base exponent
+    if (!(cin >> a >> b >> base >> exponent)) return 0;
+
+    // Use scope resolution operator :: to call the correct operate() function
+    int addResult = Arithmetic::operate(a, b);
+    int multResult = Advanced::operate(a, b);
+    int powResult = Advanced::Power::operate(base, exponent);
+
+    // Output formatting as per requirements
+    cout << "Addition: " << addResult << endl;
+    cout << "Multiplication: " << multResult << endl;
+    cout << "Power: " << powResult << endl;
+
+    return 0;
+}
