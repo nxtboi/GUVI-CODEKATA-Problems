@@ -1,0 +1,59 @@
+#include <iostream>
+#include <fstream>
+#include <cstring>
+
+using namespace std;
+
+class Employee {
+public:
+    int id;
+    char name[20];
+    double salary;
+
+    void input() {
+        cin >> id >> name >> salary;
+    }
+
+    void display() {
+        cout << "ID: " << id << endl;
+        cout << "Name: " << name << endl;
+        cout << "Salary: " << salary << endl;
+    }
+};
+
+int main() {
+    int n, recordNum;
+    
+    // Read number of employees
+    if (!(cin >> n)) return 0;
+
+    // Create and write objects to binary file
+    fstream file("employees.dat", ios::binary | ios::out | ios::in | ios::trunc);
+    
+    for (int i = 0; i < n; ++i) {
+        Employee emp;
+        emp.input();
+        file.write(reinterpret_cast<char*>(&emp), sizeof(Employee));
+    }
+
+    // Read the record number to find
+    cin >> recordNum;
+
+    // Validate record number (starts from 1)
+    if (recordNum > 0 && recordNum <= n) {
+        Employee emp;
+        // Calculate offset: (record number - 1) * size of object
+        int pos = (recordNum - 1) * sizeof(Employee);
+        
+        file.seekg(pos, ios::beg);
+        file.read(reinterpret_cast<char*>(&emp), sizeof(Employee));
+        
+        cout << "Employee Found:" << endl;
+        emp.display();
+    } else {
+        cout << "Record not found" << endl;
+    }
+
+    file.close();
+    return 0;
+}
