@@ -1,0 +1,74 @@
+#include <iostream>
+#include <fstream>
+#include <cstring>
+
+using namespace std;
+
+class Student {
+public:
+    int roll;
+    char name[20];
+    float marks;
+
+    void input() {
+        cin >> roll >> name >> marks;
+    }
+
+    void display() {
+        cout << "Roll: " << roll << endl;
+        cout << "Name: " << name << endl;
+        cout << "Marks: " << (int)marks << endl; // Casting to match sample output format if needed
+    }
+};
+
+int main() {
+    int n;
+    if (!(cin >> n)) return 0;
+
+    // Use a fixed filename
+    const char* filename = "students.dat";
+
+    // 1. Write initial records to binary file
+    fstream file(filename, ios::binary | ios::out | ios::in | ios::trunc);
+    for (int i = 0; i < n; ++i) {
+        Student s;
+        s.input();
+        file.write(reinterpret_cast<char*>(&s), sizeof(Student));
+    }
+
+    int recordNum;
+    float newMarks;
+    cin >> recordNum >> newMarks;
+
+    // 2. Random Access Update
+    if (recordNum > 0 && recordNum <= n) {
+        Student s;
+        // Calculate the byte offset
+        long pos = (recordNum - 1) * sizeof(Student);
+
+        // Move to the position to read the existing record
+        file.seekg(pos, ios::beg);
+        file.read(reinterpret_cast<char*>(&s), sizeof(Student));
+
+        // Update the marks
+        s.marks = newMarks;
+
+        // Move back to the same position to overwrite the record
+        file.seekp(pos, ios::beg);
+        file.write(reinterpret_cast<char*>(&s), sizeof(Student));
+
+        // 3. Final display
+        cout << "Record Updated Successfully" << endl;
+        cout << "Updated Record:" << endl;
+        
+        // Ensure the read pointer is at the correct spot
+        file.seekg(pos, ios::beg);
+        file.read(reinterpret_cast<char*>(&s), sizeof(Student));
+        s.display();
+    } else {
+        cout << "Record not found" << endl;
+    }
+
+    file.close();
+    return 0;
+}
