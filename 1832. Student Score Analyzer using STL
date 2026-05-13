@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    map<string, int> studentScores;
+    vector<int> scores;
+
+    // Input student data
+    for (int i = 0; i < n; i++) {
+        string name;
+        int score;
+
+        cin >> name >> score;
+
+        studentScores[name] = score;
+        scores.push_back(score);
+    }
+
+    // Sort scores in ascending order
+    sort(scores.begin(), scores.end());
+
+    // Count students scoring above 75
+    int countAbove75 = count_if(scores.begin(), scores.end(),
+                               [](int s) { return s > 75; });
+
+    // Find highest and lowest scores
+    int highest = *max_element(scores.begin(), scores.end());
+    int lowest = *min_element(scores.begin(), scores.end());
+
+    // Output
+    cout << "Sorted Scores: ";
+    for (int s : scores) {
+        cout << s << " ";
+    }
+    cout << endl;
+
+    cout << "Highest Score: " << highest << endl;
+    cout << "Lowest Score: " << lowest << endl;
+    cout << "Students above 75: " << countAbove75 << endl;
+
+    return 0;
+}
